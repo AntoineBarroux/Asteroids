@@ -3,7 +3,7 @@
 // Copyright (c) 2010 Doug McInnes
 //
 
-KEY_CODES = {
+/*KEY_CODES = {
   32: 'space',
   37: 'left',
   38: 'up',
@@ -14,7 +14,7 @@ KEY_CODES = {
   72: 'h',
   77: 'm',
   80: 'p'
-}
+}*/
 
 KEY_STATUS = { keyDown:false };
 for (code in KEY_CODES) {
