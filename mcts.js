@@ -13,31 +13,47 @@ KEY_CODES = {
     80: 'p'
 };
 
+const NB_ACTIONS = 5;
+
+// Méthode permettant de faciliter la génération de nombres entiers aléatoires
+function getRandomInt(max){
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+// Méthode permettant de récupérer la taille d'un objet (= son nombre de propriétés)
+function size(obj){
+    var size = 0;
+    var key;
+    for (key in obj){
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+}
 
 
-// Classe Observable : elle sera observée par le jeu pour réaliser les actions
-// Elle possède un tableau de ses observers
-var Observable = function(){
-    this.observers = new Array();
+
+
+
+
+// L'objet MCTS qui correspond à l'algorithme de Monte Carlo. Il possède un listener qui est le jeu associé et permettra d'envoyer les décisions qu'il
+// aura prise à chaque frame.
+var Mcts = function(listener){
+    this.listener = listener;
 };
 
-// Objet en Javascript : on rajoute des méthodes au prototype de l'objet Controller
-Observable.prototype = {
+// La méthode notify permettra d'envoyer l'action à réaliser au listener
+Mcts.prototype.notify = function(action){
+    this.listener.notify(action);
+};
 
-    // Permet d'inscrire un observeur à cet observable
-    register: function(observer){
-        this.observers.push(observer);
-        return this;
-    },
-
-    // Permet de notifier aux observeurs l'action réalisée
-    notifyObserver: function(action){
-        $.each(this.observers, function(i, observer){
-            observer.notify(action);
-        });
+Mcts.prototype.generate = function(){
+    var index;
+    for (var i = 0; i<10; i++){
+        index = getRandomInt(NB_ACTIONS);
+        console.log("MCTS index = " + index);
+        this.notify(KEY_CODES[index]);
     }
 };
-
 
 
 
@@ -50,6 +66,4 @@ var State = function(direction, speed, closeEnnemies) {
     this.closeEnnemies = closeEnnemies;
 };
 
-// Un état extends la classe Observable
-State.prototype = new Observable;
 
