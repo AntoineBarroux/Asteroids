@@ -13,6 +13,8 @@ KEY_CODES = {
     80: 'p'
 };
 
+SET_CODES = [32, 37, 38, 39, 40];
+
 const NB_ACTIONS = 5;
 
 // Méthode permettant de faciliter la génération de nombres entiers aléatoires
@@ -47,12 +49,8 @@ Mcts.prototype.notify = function(action){
 };
 
 Mcts.prototype.generate = function(){
-    var index;
-    for (var i = 0; i<10; i++){
-        index = getRandomInt(NB_ACTIONS);
-        console.log("MCTS index = " + index);
-        this.notify(KEY_CODES[index]);
-    }
+    var index = getRandomInt(NB_ACTIONS);
+    this.notify(SET_CODES[index]);
 };
 
 
