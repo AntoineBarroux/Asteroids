@@ -166,8 +166,7 @@ Sprite = function () {
                 this.y -= this.currentNode.dupe.vertical;
             }
         }
-        if (isNaN(this.x))
-            console.log(this);
+
     };
     this.move = function (delta) {
         if (!this.visible) return;
@@ -985,6 +984,8 @@ Game = {
             this.state = 'spawn_ship';
         },
         spawn_ship: function () {
+            // INITIALISATION POSITION VAISSEAU
+
             Game.ship.x = Game.canvasWidth / 2;
             Game.ship.y = Game.canvasHeight / 2;
             if (Game.ship.isClear()) {
@@ -1112,9 +1113,6 @@ $(function () {
 
     var ship = new Ship();
 
-    ship.x = Game.canvasWidth / 2;
-    ship.y = Game.canvasHeight / 2;
-
     sprites.push(ship);
 
     ship.bullets = [];
@@ -1225,11 +1223,10 @@ $(function () {
             avgFramerate = frameCount;
             frameCount = 0;
         }
-
         if (paused) {
             Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
         } else {
-            Game.listener.mcts.generate();
+            Game.listener.mcts.generate(Game.sprites, Game.score);
             requestAnimFrame(mainLoop, canvasNode);
         }
     };

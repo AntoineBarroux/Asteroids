@@ -48,9 +48,27 @@ Mcts.prototype.notify = function(action){
     this.listener.notify(action);
 };
 
-Mcts.prototype.generate = function(){
+Mcts.prototype.generate = function(sprites, score){
     var index = getRandomInt(NB_ACTIONS);
-    this.notify(SET_CODES[index]);
+
+    var currentSprites = [];
+    var sprite;
+    for (var i = 0; i < Game.sprites.length; i++) {
+        sprite = sprites[i];
+        if (sprite.visible){
+            currentSprites.push(sprite);
+            if (sprite.name == 'ship'){
+                if (sprite.bulletCounter <= 0) console.log('canShoot');
+                else console.log('can\'t shoot');
+            }
+        }
+    }
+
+
+
+
+    //console.log(sprites);
+    //this.notify(SET_CODES[0]);
 };
 
 
