@@ -86,7 +86,21 @@ var State = function(direction, speed, closeEnnemies) {
 
 //Définition de la structure d'un noeud
 var Noeud = function(){
+	//constructeur du noeud root
+	/*this.init = function(){
+		this.ship = Game.ship; // pour savoir quel sprite est le ship
+		this.nbwin = 0;
+		this.nbPlayed = 0;
+		this.pere=null;
+		this.chilD = null;
+		this.chilG = null;
+		this.chilU = null;
+		this.chilS = null;
+		this.spriteList = {};
+	}*/
+	//constructeur des noeuds non root
 	this.init = function(p){
+		this.ship = p.ship; // pour savoir quel sprite est le ship
 		this.nbwin = 0;
 		this.nbPlayed = 0;
 		this.pere=p;
@@ -143,13 +157,11 @@ Mcts.prototype.runSimu = function(){
 		break;
 		default:
 	 }
+	 //ajouter la partie si c win ou non
 	
 	
 	
 	}
-//32: 'space',
-    37: 'left',
-    38: 'up',
-    39: 'right',
+
 
 }
