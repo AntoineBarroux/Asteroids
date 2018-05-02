@@ -63,7 +63,7 @@ Mcts.prototype.generate = function(sprites, score){
         }
     }
 	
-
+    
 
 
 
@@ -76,43 +76,71 @@ Mcts.prototype.generate = function(sprites, score){
 
 // Direction la direction de l'état initial, speed la vitesse initiale, closeEnnemies un
 // tableau des ennemis les plus proches dans un cercle prédéterminé.
-var State = function(direction, speed, closeEnnemies) {
+/*var State = function(direction, speed, closeEnnemies) {
     this.canShoot = true;
     this.direction = direction;
     this.speed = speed;
     this.closeEnnemies = closeEnnemies;
-};
+};*/ //Pas utile pour le moment
 
+//Implémentation du mcts
+Mcts.prototype.play = function () {
+    var root = new Node(null, new Board(Game.sprites),null); //Initialisation de l'arbre de recherche
+    
+    while(true) { //Pas de critère d'arrêt pour le moment
+        var nodeToExpande = this.select(root); //Phase de sélection
+        var nodeToExplore = this.expand(nodeToExplore); //Phase de développement
+        var isWon = this.simulate(nodeToExplore); //Phase de simulation
+        this.backpropagate(nodeToExplore,isWon); //Phase de "back-propagation"
+    }
 
-//Définition de la structure d'un noeud
-var Noeud = function(){
-	//constructeur du noeud root
-	/*this.init = function(){
-		this.ship = Game.ship; // pour savoir quel sprite est le ship
-		this.nbwin = 0;
-		this.nbPlayed = 0;
-		this.pere=null;
-		this.chilD = null;
-		this.chilG = null;
-		this.chilU = null;
-		this.chilS = null;
-		this.spriteList = {};
-	}*/
-	//constructeur des noeuds non root
-	this.init = function(p){
-		this.ship = p.ship; // pour savoir quel sprite est le ship
-		this.nbwin = 0;
-		this.nbPlayed = 0;
-		this.pere=p;
-		this.chilD = null;
-		this.chilG = null;
-		this.chilU = null;
-		this.chilS = null;
-		this.spriteList = {};
-	}
-	
+    //Une fois mcts complété, on choisit le noeud optimal
+    currentMax = root.children[0];
+    for (var i = root.children.length - 1; i >= 0; i--) {
+        if(root.children[i].ratio()>currentMax.ratio()) currentMax = root.children[i];
+    }
+
+    this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
 }
-Mcts.prototype.getPlay = function(){
+
+
+//Fonction qui permet de sélectionner le noeud à explorer/exploiter
+Mcts.prototype.select = function (root) {
+    
+}
+
+
+//Fonction qui permet fe développer un noeud
+Mcts.prototype.expand = function () {
+
+}
+
+
+//Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
+Mcts.prototype.simulate = function () {
+    return false;
+}
+
+//Fonction qui permet de "back-propager" le résultat d'une simulation et mettre à jour les noeuds parents
+Mcts.prototype.backpropagate = function (node,isWon) {
+
+    //On remonte les noeuds parents et on incrémente le nombre de visite et le nombre de victoires (si victoire il y a)
+    while(node.parent != null){
+        node.visits++;
+        node.wins += (isWon ? 1 : 0); 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/*Mcts.prototype.getPlay = function(){
 	for(var i = 0;i<15;i++){
 		runSimu();
 	}
@@ -130,8 +158,8 @@ Mcts.prototype.runSimu = function(){
     lastFrame = thisFrame;
     delta = elapsed / 30;
 	var tempNode = new Noeud{root};
-	tempNode.spriteList = listCopy; /* plutôt que faire une copie, on peut écrire tempNode.spriteList = root.spriteList mais je sais 
-	pas si du coup modifier tempNode.spriteList modifiera root.spriteList, a voir */
+	tempNode.spriteList = listCopy; // plutôt que faire une copie, on peut écrire tempNode.spriteList = root.spriteList mais je sais 
+	//pas si du coup modifier tempNode.spriteList modifiera root.spriteList, a voir
 	 for (i = 0; i < tempNode.length; i++) {
 		if(tempNode.spriteList[i].name == "ship"){temp.node.spriteList[i].preMove(delta);} //maybe useless voir le code de la fonction moove
         tempNode.spriteList[i].move(delta);
@@ -162,6 +190,4 @@ Mcts.prototype.runSimu = function(){
 	
 	
 	}
-
-
-}
+*/

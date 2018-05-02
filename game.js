@@ -1164,6 +1164,7 @@ $(function () {
     })();
 
     var mainLoop = function () {
+
         context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
 
         Game.FSM.execute();
