@@ -2,7 +2,7 @@
 
 function Node(parent, board, action) {
 	this.parent = parent; //Noeud parent, null si racine
-	this.children = {}; //Noeuds enfants, liste vide à la création du noeud
+	this.children = []; //Noeuds enfants, liste vide à la création du noeud
 	this.action = action; //L'action qui a menée au noeud, null si racine
 	this.board = board; //Etat actuel du jeu
 	this.visits = 0; //Nombre de fois que le noeud a été visité
@@ -19,6 +19,22 @@ function Node(parent, board, action) {
 		return this.wins/this.visits;
 	}
 
+	//Fonction qui permet de vérifier si le noeud est terminal
+	this.isLeaf = function () {
+		return children == {}; //À optimiser ?
+	}
 
+	//Fonction qui retourne le noeud enfant optimal
+	this.bestChild = function () {
+		var currentMax = this.children[0];
+	    for (var i = this.children.length - 1; i >= 0; i--) {
+	        if(this.children[i].UCB()>currentMax.UCB()) currentMax = this.children[i];
+	    }
+	    return currentMax;
+	}
 
+	//Fonction qui permet d'ajouter un noeud enfant
+	this.addChild = function (child) {
+		this.children.push(child);
+	}
 }

@@ -13,9 +13,11 @@ KEY_CODES = {
     80: 'p'
 };
 
-SET_CODES = [32, 37, 38, 39, 40];
+SET_CODES = [32,37,38,39]; //Actions possibles (dans l'ordre : tirer, tourner à gauche, avancer, tourner à droite)
 
-const NB_ACTIONS = 5;
+const NB_ACTIONS = 4;
+
+var canMove = true; //Temporaire pour dire quand envoyer une action random
 
 // Méthode permettant de faciliter la génération de nombres entiers aléatoires
 function getRandomInt(max){
@@ -63,13 +65,24 @@ Mcts.prototype.generate = function(sprites, score){
         }
     }
 	
-    
 
+    //Envoie une action random toutes les 0.5s
+    //Problème : la touche reste appuyée
+    if (canMove) {
+        mctsTemp = this;
+        canMove = false;
+        setTimeout(function () {
+            mctsTemp.notify(SET_CODES[index]);
+            console.log(KEY_CODES[SET_CODES[index]]);
+            canMove = true;
+        }, 500);
+    }
 
 
 
     //console.log(sprites);
-    //this.notify(SET_CODES[0]);
+    //
+    //
 };
 
 
@@ -87,11 +100,10 @@ Mcts.prototype.generate = function(sprites, score){
 Mcts.prototype.play = function () {
     var root = new Node(null, new Board(Game.sprites),null); //Initialisation de l'arbre de recherche
     
-    while(true) { //Pas de critère d'arrêt pour le moment
-        var nodeToExpande = this.select(root); //Phase de sélection
-        var nodeToExplore = this.expand(nodeToExplore); //Phase de développement
-        var isWon = this.simulate(nodeToExplore); //Phase de simulation
-        this.backpropagate(nodeToExplore,isWon); //Phase de "back-propagation"
+    for (var i = 0; i < 50; i++) { //50 tours pour le moment, paramètre à tunner
+        var nodeToSimulate = this.select(root); //Phases de sélection et de développement
+        var isWon = this.simulate(nodeToSimulate); //Phase de simulation
+        this.backpropagate(nodeToSimulate,isWon); //Phase de "back-propagation"
     }
 
     //Une fois mcts complété, on choisit le noeud optimal
@@ -104,20 +116,37 @@ Mcts.prototype.play = function () {
 }
 
 
-//Fonction qui permet de sélectionner le noeud à explorer/exploiter
-Mcts.prototype.select = function (root) {
-    
+//Fonction qui permet de sélectionner le noeud à exploiter et à développer les noeuds traversés
+Mcts.prototype.select = function (node) {
+    var currentNode = node;
+    while(!currentNode.isLeaf()) {
+        expand(currentNode);
+        currentNode = currentNode.bestChild();
+    }
+    return currentNode;
 }
 
 
-//Fonction qui permet fe développer un noeud
-Mcts.prototype.expand = function () {
-
+//Fonction qui permet fe développer un noeud en choisissant une action non existante parmi les noeuds enfants
+Mcts.prototype.expand = function (node) {
+    outloop: //Pour "break"/"continue" les 2 loop en même temps
+    for (var i = SET_CODES.length - 1; i >= 0; i--) {
+        for (var i = node.children.length - 1; i >= 0; i--) {
+            if(node.children[i].action == SET_CODES[i]) {
+                continue outloop;
+            }
+        }
+        node.addChild(new Node(node, node.board, SET_CODES[i])); //Revoir le node.board
+        break outloop;
+    }
 }
 
 
 //Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
 Mcts.prototype.simulate = function () {
+    //Test avec une proba de win de 1/10
+    var index = getRandomInt(10);
+    if (index == 5) return true;
     return false;
 }
 
@@ -125,16 +154,12 @@ Mcts.prototype.simulate = function () {
 Mcts.prototype.backpropagate = function (node,isWon) {
 
     //On remonte les noeuds parents et on incrémente le nombre de visite et le nombre de victoires (si victoire il y a)
-    while(node.parent != null){
+    while(node != null){
         node.visits++;
-        node.wins += (isWon ? 1 : 0); 
+        node.wins += isWon; 
+        node = node.parent;
     }
 }
-
-
-
-
-
 
 
 
