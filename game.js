@@ -389,13 +389,19 @@ Ship = function () {
 
 
 
-    this.decision = function(action){
+    this.decision = function(action){/*
         var e = new KeyboardEvent("keydown", {
             key: KEY_CODES[action], code: action,
             charCode: action, keyCode: action,
             which:action
         });
-        window.dispatchEvent(e);
+        window.dispatchEvent(e);*/
+
+        //Simulation d'un keypress
+        $(window).trigger({type:'keydown',keyCode:action});
+        setTimeout(function () {
+            $(window).trigger({type:'keyup',keyCode:action})
+        },100);
     },
 
 
@@ -1164,6 +1170,7 @@ $(function () {
     })();
 
     var mainLoop = function () {
+
         context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
 
         Game.FSM.execute();
