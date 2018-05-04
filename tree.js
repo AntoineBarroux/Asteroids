@@ -21,7 +21,7 @@ function Node(parent, board, action) {
 
 	//Fonction qui permet de vérifier si le noeud est terminal
 	this.isLeaf = function () {
-		return children == {}; //À optimiser ?
+		return this.children == []; //À optimiser ?
 	}
 
 	//Fonction qui retourne le noeud enfant optimal

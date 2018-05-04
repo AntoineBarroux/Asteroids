@@ -68,7 +68,7 @@ Mcts.prototype.generate = function(sprites, score){
 
     //Envoie une action random toutes les 0.5s
     //Problème : la touche reste appuyée
-    if (canMove) {
+    /*if (canMove) {
         mctsTemp = this;
         canMove = false;
         setTimeout(function () {
@@ -76,7 +76,9 @@ Mcts.prototype.generate = function(sprites, score){
             console.log(KEY_CODES[SET_CODES[index]]);
             canMove = true;
         }, 500);
-    }
+    }*/
+
+    this.play();
 
 
 
@@ -120,7 +122,7 @@ Mcts.prototype.play = function () {
 Mcts.prototype.select = function (node) {
     var currentNode = node;
     while(!currentNode.isLeaf()) {
-        expand(currentNode);
+        this.expand(currentNode);
         currentNode = currentNode.bestChild();
     }
     return currentNode;
