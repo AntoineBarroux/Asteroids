@@ -100,23 +100,30 @@ Mcts.prototype.generate = function(sprites, score){
 
 //Implémentation du mcts
 Mcts.prototype.play = function () {
-    var root = new Node(null, new Board(Game.sprites),null); //Initialisation de l'arbre de recherche
-    
-    for (var i = 0; i < 50; i++) { //50 tours pour le moment, paramètre à tunner
-        var nodeToSimulate = this.select(root); //Phases de sélection et de développement
-        var isWon = this.simulate(nodeToSimulate); //Phase de simulation
-        this.backpropagate(nodeToSimulate,isWon); //Phase de "back-propagation"
+    if (Game.hasOwnProperty("counter")) Game.counter = Game.counter + 1;
+    else Game.counter = 0;
+
+
+    if (Game.counter >= 10) return;
+    // Permet de copier l'objet Game.sprites
+    else{
+        Mcts.sprites = Object.assign({}, Game.sprites);
+        var root = new Node(null, null); //Initialisation de l'arbre de recherche
+
+        for (var i = 0; i < 50; i++) { //50 tours pour le moment, paramètre à tunner
+            var nodeToSimulate = this.select(root); //Phases de sélection et de développement
+            var isWon = this.simulate(nodeToSimulate); //Phase de simulation
+            this.backpropagate(nodeToSimulate,isWon); //Phase de "back-propagation"
+        }
+
+        //Une fois mcts complété, on choisit le noeud optimal
+        currentMax = root.children[0];
+        for (var i = root.children.length - 1; i > 0; i--) {
+            if(root.children[i].ratio()>currentMax.ratio()) currentMax = root.children[i];
+            this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
+        }
     }
 
-        
-
-    //Une fois mcts complété, on choisit le noeud optimal
-    currentMax = root.children[0];
-    for (var i = root.children.length - 1; i > 0; i--) {
-        if(root.children[i].ratio()>currentMax.ratio()) currentMax = root.children[i];
-    }
-
-    this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
 }
 
 
@@ -142,14 +149,14 @@ Mcts.prototype.expand = function (node) {
                 continue outloop;
             }
         }
-        return node.addChild(new Node(node, node.board, SET_CODES[i])); //Revoir le node.board
+        return node.addChild(new Node(node, SET_CODES[i])); //Revoir le node.board
     }
 }
 
 
 //Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
 Mcts.prototype.simulate = function () {
-    //Test avec une proba de win de 1/10
+    //Test avec une proba de win de 1/8
     var index = getRandomInt(8);
     if (index == 1) return true;
     return false;
