@@ -11,17 +11,17 @@ function Node(parent, board, action) {
 
 	//Fonction qui permet de calculer le score UCB qui permet de trouver un compromis entre exploration et exploitation
 	this.UCB = function () {
-		return this.ratio() + this.c*Math.sqrt(Math.log(parent.visits)/this.visits);
+		return this.ratio() + this.c*Math.sqrt((this.visits == 0 || this.parent.visits == 0) ? 0 : Math.log(this.parent.visits)/this.visits);
 	}
 
 	//Fonction qui permet de calculer le ratio wins/visits
 	this.ratio = function () {
-		return this.wins/this.visits;
+		return this.visits == 0 ? 0 : this.wins/this.visits;
 	}
 
 	//Fonction qui permet de vérifier si le noeud est terminal
 	this.isLeaf = function () {
-		return this.children == []; //À optimiser ?
+		return this.children.length == 0; //À optimiser ?
 	}
 
 	//Fonction qui retourne le noeud enfant optimal
@@ -36,5 +36,11 @@ function Node(parent, board, action) {
 	//Fonction qui permet d'ajouter un noeud enfant
 	this.addChild = function (child) {
 		this.children.push(child);
+		return child;
+	}
+
+	//Fonction qui permet de vérifier si un noeud à été complètement développé
+	this.fullyExpanded = function () {
+		return this.children.length == 4 ? true : false;
 	}
 }

@@ -108,9 +108,11 @@ Mcts.prototype.play = function () {
         this.backpropagate(nodeToSimulate,isWon); //Phase de "back-propagation"
     }
 
+        
+
     //Une fois mcts complété, on choisit le noeud optimal
     currentMax = root.children[0];
-    for (var i = root.children.length - 1; i >= 0; i--) {
+    for (var i = root.children.length - 1; i > 0; i--) {
         if(root.children[i].ratio()>currentMax.ratio()) currentMax = root.children[i];
     }
 
@@ -122,24 +124,25 @@ Mcts.prototype.play = function () {
 Mcts.prototype.select = function (node) {
     var currentNode = node;
     while(!currentNode.isLeaf()) {
-        this.expand(currentNode);
+        if(!currentNode.fullyExpanded()) return this.expand(currentNode);
         currentNode = currentNode.bestChild();
-    }
+    } 
+    this.expand(currentNode);
+    currentNode = currentNode.bestChild();
     return currentNode;
 }
 
 
 //Fonction qui permet fe développer un noeud en choisissant une action non existante parmi les noeuds enfants
 Mcts.prototype.expand = function (node) {
-    outloop: //Pour "break"/"continue" les 2 loop en même temps
+    outloop:
     for (var i = SET_CODES.length - 1; i >= 0; i--) {
-        for (var i = node.children.length - 1; i >= 0; i--) {
-            if(node.children[i].action == SET_CODES[i]) {
+        for (var j = node.children.length - 1; j >= 0; j--) {
+            if(node.children[j].action == SET_CODES[i]) {
                 continue outloop;
             }
         }
-        node.addChild(new Node(node, node.board, SET_CODES[i])); //Revoir le node.board
-        break outloop;
+        return node.addChild(new Node(node, node.board, SET_CODES[i])); //Revoir le node.board
     }
 }
 
@@ -147,8 +150,8 @@ Mcts.prototype.expand = function (node) {
 //Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
 Mcts.prototype.simulate = function () {
     //Test avec une proba de win de 1/10
-    var index = getRandomInt(10);
-    if (index == 5) return true;
+    var index = getRandomInt(8);
+    if (index == 1) return true;
     return false;
 }
 
