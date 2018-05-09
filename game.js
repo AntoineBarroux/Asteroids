@@ -173,7 +173,11 @@ Sprite = function () {
         this.transPoints = null; // clear cached points
 
         if ($.isFunction(this.preMove)) {
-            this.preMove(delta);
+            if (this.name == 'ship'){
+                this.preMove(delta, null);
+            } else{
+                this.preMove(delta, Game.booleans);
+            }
         }
 
         this.vel.x += this.acc.x * delta;
@@ -402,6 +406,7 @@ Ship = function () {
         setTimeout(function () {
             $(window).trigger({type:'keyup',keyCode:action})
         },100);
+
     },
 
 
@@ -409,51 +414,101 @@ Ship = function () {
 
 
 
+    // booleans = le tableau glabal de booléens pour simuler les calculs
+    this.preMove = function (delta, booleans) {
+        if (booleans == null){
+            if (KEY_STATUS.left) {
+                this.vel.rot = -6;
+            } else if (KEY_STATUS.right) {
+                this.vel.rot = 6;
+            } else {
+                this.vel.rot = 0;
+            }
 
-    this.preMove = function (delta) {
-        if (KEY_STATUS.left) {
-            this.vel.rot = -6;
-        } else if (KEY_STATUS.right) {
-            this.vel.rot = 6;
-        } else {
-            this.vel.rot = 0;
-        }
+            if (KEY_STATUS.up) {
+                var rad = ((this.rot-90) * Math.PI)/180;
+                this.acc.x = 0.5 * Math.cos(rad);
+                this.acc.y = 0.5 * Math.sin(rad);
+                this.children.exhaust.visible = Math.random() > 0.1;
+            } else {
+                this.acc.x = 0;
+                this.acc.y = 0;
+                this.children.exhaust.visible = false;
+            }
 
-        if (KEY_STATUS.up) {
-            var rad = ((this.rot-90) * Math.PI)/180;
-            this.acc.x = 0.5 * Math.cos(rad);
-            this.acc.y = 0.5 * Math.sin(rad);
-            this.children.exhaust.visible = Math.random() > 0.1;
-        } else {
-            this.acc.x = 0;
-            this.acc.y = 0;
-            this.children.exhaust.visible = false;
-        }
-
-        if (this.bulletCounter > 0) {
-            this.bulletCounter -= delta;
-        }
-        if (KEY_STATUS.space) {
-            if (this.bulletCounter <= 0) {
-                this.bulletCounter = 10;
-                for (var i = 0; i < this.bullets.length; i++) {
-                    if (!this.bullets[i].visible) {
-                        SFX.laser();
-                        var bullet = this.bullets[i];
-                        var rad = ((this.rot-90) * Math.PI)/180;
-                        var vectorx = Math.cos(rad);
-                        var vectory = Math.sin(rad);
-                        // move to the nose of the ship
-                        bullet.x = this.x + vectorx * 4;
-                        bullet.y = this.y + vectory * 4;
-                        bullet.vel.x = 6 * vectorx + this.vel.x;
-                        bullet.vel.y = 6 * vectory + this.vel.y;
-                        bullet.visible = true;
-                        break;
+            if (this.bulletCounter > 0) {
+                this.bulletCounter -= delta;
+            }
+            if (KEY_STATUS.space) {
+                if (this.bulletCounter <= 0) {
+                    this.bulletCounter = 10;
+                    for (var i = 0; i < this.bullets.length; i++) {
+                        if (!this.bullets[i].visible) {
+                            SFX.laser();
+                            var bullet = this.bullets[i];
+                            var rad = ((this.rot-90) * Math.PI)/180;
+                            var vectorx = Math.cos(rad);
+                            var vectory = Math.sin(rad);
+                            // move to the nose of the ship
+                            bullet.x = this.x + vectorx * 4;
+                            bullet.y = this.y + vectory * 4;
+                            bullet.vel.x = 6 * vectorx + this.vel.x;
+                            bullet.vel.y = 6 * vectory + this.vel.y;
+                            bullet.visible = true;
+                            break;
+                        }
                     }
                 }
             }
         }
+
+        else{
+            if (booleans.left) {
+                this.vel.rot = -6;
+            } else if (booleans.right) {
+                this.vel.rot = 6;
+            } else {
+                this.vel.rot = 0;
+            }
+
+            if (booleans.up) {
+                var rad = ((this.rot-90) * Math.PI)/180;
+                this.acc.x = 0.5 * Math.cos(rad);
+                this.acc.y = 0.5 * Math.sin(rad);
+                this.children.exhaust.visible = Math.random() > 0.1;
+            } else {
+                this.acc.x = 0;
+                this.acc.y = 0;
+                this.children.exhaust.visible = false;
+            }
+
+            if (this.bulletCounter > 0) {
+                this.bulletCounter -= delta;
+            }
+            if (booleans.space) {
+                if (this.bulletCounter <= 0) {
+                    this.bulletCounter = 10;
+                    for (var i = 0; i < this.bullets.length; i++) {
+                        if (!this.bullets[i].visible) {
+                            SFX.laser();
+                            var bullet = this.bullets[i];
+                            var rad = ((this.rot-90) * Math.PI)/180;
+                            var vectorx = Math.cos(rad);
+                            var vectory = Math.sin(rad);
+                            // move to the nose of the ship
+                            bullet.x = this.x + vectorx * 4;
+                            bullet.y = this.y + vectory * 4;
+                            bullet.vel.x = 6 * vectorx + this.vel.x;
+                            bullet.vel.y = 6 * vectory + this.vel.y;
+                            bullet.visible = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         // limit the ship's speed
         if (Math.sqrt(this.vel.x * this.vel.x + this.vel.y * this.vel.y) > 8) {
@@ -913,7 +968,7 @@ Game = {
     totalAsteroids: 5,
     lives: 0,
     listener: new Listener(),
-
+    booleans: {left: false, right: false, up: false, space: false},
 
     canvasWidth: 800,
     canvasHeight: 600,

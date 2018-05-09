@@ -100,18 +100,16 @@ Mcts.prototype.generate = function(sprites, score){
 
 //Implémentation du mcts
 Mcts.prototype.play = function () {
-    /*if (Game.hasOwnProperty("counter")) Game.counter = Game.counter + 1;
-    else Game.counter = 0;
+    Mcts.c = Math.sqrt(2); //Paramètre d'exploration, à tunner (dans la théorie égal à sqrt(2))
 
 
-    if (Game.counter >= 10) return;
     // Permet de copier l'objet Game.sprites
-    else{
-        Mcts.sprites = Object.assign({}, Game.sprites);*/
+        Mcts.sprites = Object.assign({}, Game.sprites);
         var root = new Node(null, null); //Initialisation de l'arbre de recherche
 
         for (var i = 0; i < 50; i++) { //50 tours pour le moment, paramètre à tunner
             var nodeToSimulate = this.select(root); //Phases de sélection et de développement
+            //console.log(nodeToSimulate.parent.children.length);
             var isWon = this.simulate(nodeToSimulate); //Phase de simulation
             this.backpropagate(nodeToSimulate,isWon); //Phase de "back-propagation"
         }
@@ -120,9 +118,11 @@ Mcts.prototype.play = function () {
         currentMax = root.children[0];
         for (var i = root.children.length - 1; i > 0; i--) {
             if(root.children[i].ratio()>currentMax.ratio()) currentMax = root.children[i];
-            this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
         }
-   // }
+
+        this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
+
+    // }
 
 }
 
@@ -156,8 +156,15 @@ Mcts.prototype.expand = function (node) {
 
 //Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
 Mcts.prototype.simulate = function () {
+    for (var i = 0; i<20; i++){ // Paramètre à tuner
+        var index = getRandomInt(4);
+        var action = SET_CODES[index];
+        KEY_STATUS.keyDown = true;
+        KEY_STATUS[KEY_CODES[index]] = true;
+
+    }
+
     //Test avec une proba de win de 1/8
-    var index = getRandomInt(8);
     if (index == 1) return true;
     return false;
 }
