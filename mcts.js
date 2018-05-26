@@ -174,7 +174,7 @@ Mcts.prototype.simulate = function (node) {
         Mcts.booleans[KEY_CODES[action]] = true;
 
         for (var key in mNode.sprites) {
-            mNode.sprites[key].move(delta, Mcts.booleans);
+            mNode.sprites[key].move(Game.delta, Mcts.booleans);
             Mcts.booleans[KEY_CODES[action]] = false;
             updateGrid(mNode.sprites[key], mNode.grid);
             var candidates = findCollisionCandidates(mNode);

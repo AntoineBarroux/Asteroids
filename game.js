@@ -973,6 +973,7 @@ Game = {
     bigAlien: null,
 
     nextBigAlienTime: null,
+    delta: 0.3,
 
     notify: function(action){
         console.log(action);

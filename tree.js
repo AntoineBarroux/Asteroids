@@ -27,11 +27,10 @@ function Node(parent, action) {
                 this.grid = $.extend(true, {}, this.sprites[length-1].grid);
             }
         }
-        let delta = 0.3;
 
         Mcts.booleans[KEY_CODES[action]] = true;
         for (var key in this.sprites) {
-            this.sprites[key].move(delta, Mcts.booleans);
+            this.sprites[key].move(Game.delta, Mcts.booleans);
             updateGrid(this.sprites[key], this.grid);
 
         }
@@ -80,13 +79,17 @@ function Node(parent, action) {
 
 
 function updateGrid(sprite, grid) {
-    debugger;
     var gridx = Math.floor(sprite.x / GRID_SIZE);
     var gridy = Math.floor(sprite.y / GRID_SIZE);
     gridx = (gridx >= grid.length) ? 0 : gridx;
     gridy = (gridy >= grid[0].length) ? 0 : gridy;
     gridx = (gridx < 0) ? grid.length-1 : gridx;
     gridy = (gridy < 0) ? grid[0].length-1 : gridy;
+
+    if (isNaN(gridx) || isNaN(gridy) || grid[gridx] == undefined){
+        return;
+    }
+    
     var newNode = grid[gridx][gridy];
     if (newNode != sprite.currentNode) {
         if (sprite.currentNode) {
