@@ -496,7 +496,6 @@ Ship = function () {
                             bullet.y = this.y + vectory * 4;
                             bullet.vel.x = 6 * vectorx + this.vel.x;
                             bullet.vel.y = 6 * vectory + this.vel.y;
-                            bullet.visible = true;
                             break;
                         }
                     }

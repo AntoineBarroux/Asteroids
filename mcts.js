@@ -166,16 +166,24 @@ Mcts.prototype.expand = function (node) {
 
 
 //Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
-Mcts.prototype.simulate = function () {
-    for (var i = 0; i<10; i++){ // Paramètre à tuner
+Mcts.prototype.simulate = function (node) {
+    var mNode = $.extend(true, {}, node);
+    for (var i = 0; i<10; i++) { // Paramètre à tuner
         var index = getRandomInt(4);
         var action = SET_CODES[index];
-        //Mcts.booleans[KEY_CODES[action]] = true;
+        Mcts.booleans[KEY_CODES[action]] = true;
+
+        for (var key in mNode.sprites) {
+            mNode.sprites[key].move(delta, Mcts.booleans);
+            Mcts.booleans[KEY_CODES[action]] = false;
+            updateGrid(mNode.sprites[key], mNode.grid);
+            var candidates = findCollisionCandidates(mNode);
+            if (checkCollisionAgainst(mNode.sprites[key], candidates) == false) return false;
+        }
     }
 
-    //Test avec une proba de win de 1/8
-    if (index == 1) return true;
-    return false;
+    return true;
+
 }
 
 //Fonction qui permet de "back-propager" le résultat d'une simulation et mettre à jour les noeuds parents
