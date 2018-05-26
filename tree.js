@@ -14,18 +14,23 @@ function Node(parent, action) {
 	if (this.parent == null) { // Si c'est la racine, la liste des sprites est égale à Game.sprites
 		this.sprites = Mcts.sprites;
 
-    } else{ // Sinon, la liste des sprites correspond aux sprites du noeud parent sur lesquels on a appliqué move
-			this.sprites = [];
-        	for (var key in Mcts.sprites){
-				this.sprites.push($.extend(true, {}, Mcts.sprites[key]));
-			}
-			let delta = 0.3;
-			for (var key in this.sprites){
-				this.sprites[key].move(delta);
-			}
-		
-	
-}
+    } else { // Sinon, la liste des sprites correspond aux sprites du noeud parent sur lesquels on a appliqué move
+        this.sprites = [];
+        for (var key in Mcts.sprites) {
+            this.sprites.push($.extend(true, {}, Mcts.sprites[key]));
+            //this.sprites.updateGrid();
+        }
+        let delta = 0.3;
+
+
+        Mcts.booleans[KEY_CODES[action]] = true;
+        for (var key in this.sprites) {
+            this.sprites[key].move(delta, Mcts.booleans);
+        }
+        Mcts.booleans[KEY_CODES[action]] = false;
+
+    }
+
 	//Fonction qui permet de calculer le score UCB qui permet de trouver un compromis entre exploration et exploitation
 	this.UCB = function () {
 		return this.ratio() + Mcts.c*Math.sqrt((this.visits == 0 || this.parent.visits == 0) ? 0 : Math.log(this.parent.visits)/this.visits);
@@ -61,3 +66,5 @@ function Node(parent, action) {
 		return this.children.length == 4 ? true : false;
 	}
 }
+
+

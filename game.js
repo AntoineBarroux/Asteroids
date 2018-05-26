@@ -114,7 +114,7 @@ Sprite = function () {
 
     this.run = function(delta) {
 
-        this.move(delta);
+        this.move(delta, null);
         this.updateGrid();
 
         this.context.save();
@@ -168,16 +168,12 @@ Sprite = function () {
         }
 
     };
-    this.move = function (delta) {
+    this.move = function (delta, booleans) {
         if (!this.visible) return;
         this.transPoints = null; // clear cached points
 
         if ($.isFunction(this.preMove)) {
-            if (this.name == 'ship'){
-                this.preMove(delta, null);
-            } else{
-                this.preMove(delta, Game.booleans);
-            }
+            this.preMove(delta, booleans);
         }
 
         this.vel.x += this.acc.x * delta;
@@ -750,7 +746,7 @@ Asteroid = function () {
                     roid.points.reverse();
                 }
                 roid.vel.rot = Math.random() * 2 - 1;
-                roid.move(roid.scale * 3); // give them a little push
+                roid.move(roid.scale * 3, null); // give them a little push
                 Game.sprites.push(roid);
             }
         }

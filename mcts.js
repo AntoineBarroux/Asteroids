@@ -43,6 +43,13 @@ function size(obj){
 // aura prise à chaque frame.
 var Mcts = function(listener){
     this.listener = listener;
+    Mcts.booleans = {
+        left: false,
+        right: false,
+        up: false,
+        down: false,
+        space: false
+    };
 };
 
 // La méthode notify permettra d'envoyer l'action à réaliser au listener
@@ -163,9 +170,7 @@ Mcts.prototype.simulate = function () {
     for (var i = 0; i<10; i++){ // Paramètre à tuner
         var index = getRandomInt(4);
         var action = SET_CODES[index];
-        KEY_STATUS.keyDown = true;
-        KEY_STATUS[KEY_CODES[index]] = true;
-
+        //Mcts.booleans[KEY_CODES[action]] = true;
     }
 
     //Test avec une proba de win de 1/8
