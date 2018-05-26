@@ -10,19 +10,19 @@ function Node(parent, action) {
 	this.action = action; //L'action qui a menée au noeud, null si racine
 	this.visits = 0; //Nombre de fois que le noeud a été visité
 	this.wins = 0; //Nombre de fois que le noeud a mené à une victoire
-
+	
 	if (this.parent == null) { // Si c'est la racine, la liste des sprites est égale à Game.sprites
 		this.sprites = Mcts.sprites;
 
     } else{ // Sinon, la liste des sprites correspond aux sprites du noeud parent sur lesquels on a appliqué move
-		this.sprites = [];
-		for (var sprite in this.parent.sprites){
-			// Length = la taille du tableau après le push
-            var length = this.sprites.push(Object.assign({}, sprite));
-			//this.sprites[length-1].move(delta);//Comment avoir le delta ici ?
-        }
-	}
-
+			this.sprites = Object.assign({},this.parent.sprites);
+			delta = 0.3;
+			for (var key in this.sprites){
+				this.sprites[key].move(delta);
+			}
+		
+	
+}
 	//Fonction qui permet de calculer le score UCB qui permet de trouver un compromis entre exploration et exploitation
 	this.UCB = function () {
 		return this.ratio() + Mcts.c*Math.sqrt((this.visits == 0 || this.parent.visits == 0) ? 0 : Math.log(this.parent.visits)/this.visits);

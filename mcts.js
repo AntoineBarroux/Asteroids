@@ -51,7 +51,7 @@ Mcts.prototype.notify = function(action){
 };
 
 Mcts.prototype.generate = function(sprites, score){
-    var index = getRandomInt(NB_ACTIONS);
+  /*  var index = getRandomInt(NB_ACTIONS);
     var currentSprites = [];
     var sprite;
     for (var i = 0; i < Game.sprites.length; i++) { // Game.sprite = tout les sprites ?
@@ -63,7 +63,7 @@ Mcts.prototype.generate = function(sprites, score){
                 else console.log('can\'t shoot');
             }
         }
-    }
+    }*/
 	
 
     //Envoie une action random toutes les 0.5s
@@ -78,9 +78,9 @@ Mcts.prototype.generate = function(sprites, score){
         }, 500);
     }*/
 
-    this.play();
+    
 
-
+	this.play();
 
     //console.log(sprites);
     //
@@ -120,7 +120,7 @@ Mcts.prototype.play = function () {
             if(root.children[i].ratio()>currentMax.ratio()) currentMax = root.children[i];
         }
 
-        this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
+        //this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
 
     // }
 
@@ -151,6 +151,7 @@ Mcts.prototype.expand = function (node) {
         }
         return node.addChild(new Node(node, SET_CODES[i])); //Revoir le node.board
     }
+	
 }
 
 

@@ -984,6 +984,8 @@ Game = {
     },
 
 
+	
+	
     spawnAsteroids: function (count) {
         if (!count) count = this.totalAsteroids;
         for (var i = 0; i < count; i++) {
@@ -1225,7 +1227,14 @@ $(function () {
     })();
 
     var mainLoop = function () {
-
+		/*const object1={
+			a:1
+		
+		};
+		const obj2 = Object.assign({},object1);
+		obj2.a = obj2.a+1;
+		console.log("Obj1 a :"+object1.a);
+		console.log("Obj2 a :"+obj2.a);*/
         context.clearRect(0, 0, Game.canvasWidth, Game.canvasHeight);
 
         Game.FSM.execute();
@@ -1248,7 +1257,8 @@ $(function () {
         elapsed = thisFrame - lastFrame;
         lastFrame = thisFrame;
         delta = elapsed / 30;
-
+		//delta = 0.3;
+		
         for (i = 0; i < sprites.length; i++) {
 
             sprites[i].run(delta);
