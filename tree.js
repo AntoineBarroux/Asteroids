@@ -15,8 +15,11 @@ function Node(parent, action) {
 		this.sprites = Mcts.sprites;
 
     } else{ // Sinon, la liste des sprites correspond aux sprites du noeud parent sur lesquels on a appliqué move
-			this.sprites = Object.assign({},this.parent.sprites);
-			delta = 0.3;
+			this.sprites = [];
+        	for (var key in Mcts.sprites){
+				this.sprites.push($.extend(true, {}, Mcts.sprites[key]));
+			}
+			let delta = 0.3;
 			for (var key in this.sprites){
 				this.sprites[key].move(delta);
 			}

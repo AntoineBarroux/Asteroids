@@ -104,10 +104,13 @@ Mcts.prototype.play = function () {
 
 
     // Permet de copier l'objet Game.sprites
-        Mcts.sprites = Object.assign({}, Game.sprites);
+        Mcts.sprites = [];
+        Game.sprites.forEach(function(e){
+            Mcts.sprites.push($.extend(true, {}, e));
+        })
         var root = new Node(null, null); //Initialisation de l'arbre de recherche
 
-        for (var i = 0; i < 50; i++) { //50 tours pour le moment, paramètre à tunner
+        for (var i = 0; i < 10; i++) { //50 tours pour le moment, paramètre à tunner
             var nodeToSimulate = this.select(root); //Phases de sélection et de développement
             //console.log(nodeToSimulate.parent.children.length);
             var isWon = this.simulate(nodeToSimulate); //Phase de simulation
@@ -120,7 +123,7 @@ Mcts.prototype.play = function () {
             if(root.children[i].ratio()>currentMax.ratio()) currentMax = root.children[i];
         }
 
-        //this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
+        this.notify(currentMax.action); //On transmet la meilleur action au listener càd on execute la meilleure action
 
     // }
 
@@ -157,7 +160,7 @@ Mcts.prototype.expand = function (node) {
 
 //Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
 Mcts.prototype.simulate = function () {
-    for (var i = 0; i<20; i++){ // Paramètre à tuner
+    for (var i = 0; i<10; i++){ // Paramètre à tuner
         var index = getRandomInt(4);
         var action = SET_CODES[index];
         KEY_STATUS.keyDown = true;
