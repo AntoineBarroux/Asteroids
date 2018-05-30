@@ -10,12 +10,12 @@ function Node(parent, action) {
 	this.action = action; //L'action qui a menée au noeud, null si racine
 	this.visits = 0; //Nombre de fois que le noeud a été visité
 	this.wins = 0; //Nombre de fois que le noeud a mené à une victoire
-    this.grid = null;
+    //this.grid = null;
     this.isWon = 1;
 
 	if (this.parent == null) { // Si c'est la racine, la liste des sprites est égale à Game.sprites
 		this.sprites = Mcts.sprites;
-        this.grid = $.extend(true, {}, this.sprites[0].grid);
+        //this.grid = $.extend(true, {}, this.sprites[0].grid);
 
     } else { // Sinon, la liste des sprites correspond aux sprites du noeud parent sur lesquels on a appliqué move
         this.sprites = [];
@@ -23,22 +23,22 @@ function Node(parent, action) {
         for (var key in Mcts.sprites) {
             length = this.sprites.push($.extend(true, {}, Mcts.sprites[key]));
             this.sprites[length-1].visible = false;
-            if (this.grid == null){
+            /*if (this.grid == null){
                 this.grid = $.extend(true, {}, this.sprites[length-1].grid);
-            }
+            }*/
         }
 
         Mcts.booleans[KEY_CODES[action]] = true;
         for (var key in this.sprites) {
             this.sprites[key].move(Game.delta, Mcts.booleans);
-            updateGrid(this.sprites[key], this.grid);
+            //updateGrid(this.sprites[key], this.grid);
 
         }
         Mcts.booleans[KEY_CODES[action]] = false;
 
     }
 
-    console.log(this.grid);
+    
 
 	//Fonction qui permet de calculer le score UCB qui permet de trouver un compromis entre exploration et exploitation
 	this.UCB = function () {
@@ -78,7 +78,7 @@ function Node(parent, action) {
 
 
 
-function updateGrid(sprite, grid) {
+/*function updateGrid(sprite, grid) {
     var gridx = Math.floor(sprite.x / GRID_SIZE);
     var gridy = Math.floor(sprite.y / GRID_SIZE);
     gridx = (gridx >= grid.length) ? 0 : gridx;
@@ -128,7 +128,7 @@ function checkCollisionAgainst(sprite, candidates) {
     }
     return true;
 }
-
+*/
 function checkCollision(me, other) {
     if (me == other ||
         me.collidesWith.indexOf(other.name) == -1) return;

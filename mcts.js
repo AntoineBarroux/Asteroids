@@ -167,24 +167,41 @@ Mcts.prototype.expand = function (node) {
 
 //Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
 Mcts.prototype.simulate = function (node) {
-    var mNode = $.extend(true, {}, node);
+    var tSprite = []
+	tSprite = $.extend(true,{}, node.sprites);
+	/*var length;
+	for(var key in node.sprites){
+		length = tSprite.push($.extend(true, {}, node.sprites[key]));
+        tSprite[length-1].visible = false;
+	
+	}
     for (var i = 0; i<10; i++) { // Paramètre à tuner
         var index = getRandomInt(4);
         var action = SET_CODES[index];
         Mcts.booleans[KEY_CODES[action]] = true;
 
-        for (var key in mNode.sprites) {
-            mNode.sprites[key].move(Game.delta, Mcts.booleans);
-            Mcts.booleans[KEY_CODES[action]] = false;
-            updateGrid(mNode.sprites[key], mNode.grid);
-            var candidates = findCollisionCandidates(mNode);
-            if (checkCollisionAgainst(mNode.sprites[key], candidates) == false) return false;
-        }
-    }
-
-    return true;
-
+        for (var key in tSprite) {
+           tSprite[key].move(Game.delta, Mcts.booleans);
+		}
+        for(var key in tSprite){
+			for(var key2 in tSprite){
+				if(checkCollisionAgainst(tSprite[key],tSprite[key2]) == false){
+					Mcts.booleans[KEY_CODES[action]] = false;
+					return false;
+				}
+			
+			}
+				
+		}
+            //updateGrid(mNode.sprites[key], mNode.grid);
+            
+    }Mcts.booleans[KEY_CODES[action]] = false;*/
+	return true;
 }
+
+  
+
+
 
 //Fonction qui permet de "back-propager" le résultat d'une simulation et mettre à jour les noeuds parents
 Mcts.prototype.backpropagate = function (node,isWon) {

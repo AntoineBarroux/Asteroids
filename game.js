@@ -976,7 +976,7 @@ Game = {
     delta: 0.3,
 
     notify: function(action){
-        console.log(action);
+        //console.log(action);
     },
 
 
@@ -1221,7 +1221,7 @@ $(function () {
                 window.setTimeout(callback, 1000 / 60);
             };
     })();
-
+Game.count = 0;
     var mainLoop = function () {
 		/*const object1={
 			a:1
@@ -1294,9 +1294,13 @@ $(function () {
         if (paused) {
             Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
         } else {
-            Game.listener.mcts.generate(Game.sprites, Game.score);
-            requestAnimFrame(mainLoop, canvasNode);
-        }
+			//if(Game.count == 0){
+			 Game.listener.mcts.generate(Game.sprites, Game.score);
+			 //Game.count = 0;
+			//}else{Game.count++;}
+			requestAnimFrame(mainLoop, canvasNode);
+		}
+        
     };
 
     mainLoop();
