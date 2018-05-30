@@ -114,7 +114,7 @@ Mcts.prototype.play = function () {
         Mcts.sprites = [];
         Game.sprites.forEach(function(e){
             Mcts.sprites.push($.extend(true, {}, e));
-        })
+        });
         var root = new Node(null, null); //Initialisation de l'arbre de recherche
 
         for (var i = 0; i < 10; i++) { //50 tours pour le moment, paramètre à tunner
@@ -168,13 +168,11 @@ Mcts.prototype.expand = function (node) {
 //Fonction qui permet d'effectuer la simulation sur un noeud, retourne true si la simulation s'est soldé par un win
 Mcts.prototype.simulate = function (node) {
     var tSprite = []
-	tSprite = $.extend(true,{}, node.sprites);
-	/*var length;
-	for(var key in node.sprites){
+    var length;
+    for(var key in node.sprites){
 		length = tSprite.push($.extend(true, {}, node.sprites[key]));
         tSprite[length-1].visible = false;
-	
-	}
+    }
     for (var i = 0; i<10; i++) { // Paramètre à tuner
         var index = getRandomInt(4);
         var action = SET_CODES[index];
@@ -183,19 +181,14 @@ Mcts.prototype.simulate = function (node) {
         for (var key in tSprite) {
            tSprite[key].move(Game.delta, Mcts.booleans);
 		}
-        for(var key in tSprite){
-			for(var key2 in tSprite){
-				if(checkCollisionAgainst(tSprite[key],tSprite[key2]) == false){
-					Mcts.booleans[KEY_CODES[action]] = false;
-					return false;
-				}
-			
-			}
-				
-		}
+        Mcts.booleans[KEY_CODES[action]] = false;
+
+        if(checkCollision2(tSprite) == COLLISION)
+            return false;
+
             //updateGrid(mNode.sprites[key], mNode.grid);
-            
-    }Mcts.booleans[KEY_CODES[action]] = false;*/
+
+    }
 	return true;
 }
 

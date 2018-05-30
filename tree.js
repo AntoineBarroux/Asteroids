@@ -20,7 +20,7 @@ function Node(parent, action) {
     } else { // Sinon, la liste des sprites correspond aux sprites du noeud parent sur lesquels on a appliqué move
         this.sprites = [];
         var length;
-        for (var key in Mcts.sprites) {
+        for (var key in this.parent.sprites) {
             length = this.sprites.push($.extend(true, {}, Mcts.sprites[key]));
             this.sprites[length-1].visible = false;
             /*if (this.grid == null){
@@ -117,7 +117,7 @@ function findCollisionCandidates(sprite) {
     return canidates;
 }
 
-
+*/
 function checkCollisionAgainst(sprite, candidates) {
     for (var i = 0; i < candidates.length; i++) {
         var ref = candidates[i];
@@ -128,10 +128,10 @@ function checkCollisionAgainst(sprite, candidates) {
     }
     return true;
 }
-*/
+
 function checkCollision(me, other) {
     if (me == other ||
-        me.collidesWith.indexOf(other.name) == -1) return;
+        me.collidesWith.indexOf(other.name) == -1) return NOCOLLISION;
     var trans = other.transformedPoints();
     var px, py;
     var count = trans.length/2;
@@ -140,8 +140,8 @@ function checkCollision(me, other) {
         py = trans[i*2 + 1];
         // mozilla doesn't take into account transforms with isPointInPath >:-P
         if (me.pointInPolygon(px, py)){
-            me.collision(other);
-            other.collision(me);
+            // me.collision(other);
+            // other.collision(me);
 
             if (me.name == 'ship')
                 return COLLISION;
@@ -150,4 +150,39 @@ function checkCollision(me, other) {
             return NOCOLLISION;
         return OTHER;
     }
-};
+}
+
+
+function checkCollision2(sprites){
+    ship = null;
+    var i = 0;
+    while(ship == null && i < sprites.length){
+        if (sprites[i].name == 'ship'){
+            ship = sprites[i];
+        }
+        i++;
+    }
+
+    var px, py, count;
+
+    for (var key in sprites){
+        if (sprites[key] == ship) continue;
+        else{
+            var trans = sprites[key].transformedPoints();
+            count = trans.length/2;
+
+            for (i = 0; i < count; i++) {
+
+                px = trans[i * 2];
+                py = trans[i * 2 + 1];
+
+                if (ship.pointInPolygon(px, py)) {
+                    console.log("collision");
+                    return COLLISION;
+                }
+            }
+        }
+    }
+
+    return NOCOLLISION;
+}
