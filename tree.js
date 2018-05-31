@@ -21,7 +21,7 @@ function Node(parent, action) {
         this.sprites = [];
         var length;
         for (var key in this.parent.sprites) {
-            length = this.sprites.push($.extend(true, {}, Mcts.sprites[key]));
+            length = this.sprites.push($.extend(true, {}, this.parent.sprites[key]));
             this.sprites[length-1].visible = false;
             /*if (this.grid == null){
                 this.grid = $.extend(true, {}, this.sprites[length-1].grid);
@@ -154,7 +154,7 @@ function checkCollision(me, other) {
 
 
 function checkCollision2(sprites){
-    ship = null;
+    var ship = null;
     var i = 0;
     while(ship == null && i < sprites.length){
         if (sprites[i].name == 'ship'){
@@ -162,13 +162,13 @@ function checkCollision2(sprites){
         }
         i++;
     }
-
     var px, py, count;
 
-    for (var key in sprites){
-        if (sprites[key] == ship) continue;
+
+    sprites.forEach(function(sprite){
+        if (sprite == ship) return;
         else{
-            var trans = sprites[key].transformedPoints();
+            var trans = sprite.transformedPoints();
             count = trans.length/2;
 
             for (i = 0; i < count; i++) {
@@ -177,12 +177,11 @@ function checkCollision2(sprites){
                 py = trans[i * 2 + 1];
 
                 if (ship.pointInPolygon(px, py)) {
-                    console.log("collision");
                     return COLLISION;
                 }
             }
         }
-    }
-
+    });
     return NOCOLLISION;
+
 }
