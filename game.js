@@ -1,20 +1,3 @@
-// Canvas Asteroids
-//
-// Copyright (c) 2010 Doug McInnes
-//
-
-/*KEY_CODES = {
-  32: 'space',
-  37: 'left',
-  38: 'up',
-  39: 'right',
-  40: 'down',
-  70: 'f',
-  71: 'g',
-  72: 'h',
-  77: 'm',
-  80: 'p'
-}*/
 
 KEY_STATUS = { keyDown:false };
 for (code in KEY_CODES) {
@@ -368,7 +351,7 @@ Sprite = function () {
 
 Ship = function () {
     this.init("ship",
-        [-5,   4,
+        [-5,   ,4,
             0, -12,
             5,   4]);
 
@@ -384,30 +367,13 @@ Ship = function () {
 
     this.collidesWith = ["asteroid", "bigalien", "alienbullet"];
 
-
-
-
-
-
-    this.decision = function(action){/*
-        var e = new KeyboardEvent("keydown", {
-            key: KEY_CODES[action], code: action,
-            charCode: action, keyCode: action,
-            which:action
-        });
-        window.dispatchEvent(e);*/
-
+    this.decision = function(action){
         //Simulation d'un keypress
         $(window).trigger({type:'keydown',keyCode:action});
         setTimeout(function () {
             $(window).trigger({type:'keyup',keyCode:action})
         },100);
     },
-
-
-
-
-
 
 
     this.preMove = function (delta) {
@@ -1233,7 +1199,7 @@ $(function () {
         if (paused) {
             Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
         } else {
-            Game.listener.mcts.generate(Game.sprites, Game.score);
+            Game.listener.mcts.play();
             requestAnimFrame(mainLoop, canvasNode);
         }
     };
@@ -1260,4 +1226,3 @@ $(function () {
     });
 });
 
-// vim: fdl=0
